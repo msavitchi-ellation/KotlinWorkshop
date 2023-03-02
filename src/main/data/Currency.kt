@@ -6,7 +6,7 @@ import functions.obtainExchangeRate
 enum class Currency(val code: String, val callingName: String = "Undefined"){
 	EUR("EUR", "Euro"),
 	USD( "USD", "US Dollar"),
-	UA( "UA", "Grivna"),
+	UA( "UAH", "Grivna"),
 	RON( "RON", "Romanian Leu"),
 	RUB( "RUB", "Russian Ruble"),
 	MY_CURRENCY("MYC");

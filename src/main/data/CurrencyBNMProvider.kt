@@ -4,22 +4,35 @@ import java.net.URL
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 
-class CurrencyBNMProvider(date: LocalDate) {
+class CurrencyBNMProvider(private val date: LocalDate) {
 
 	private val headerOffset = 2
-	private var excanges = returnExchanges(date)
-	private val currencySymbolIndex = excanges!![headerOffset].split(";").indexOf("Abbr")
-	private val currencyRateIndex = excanges[headerOffset].split(";").indexOf("Rates")
-	private val currencyMultiplierIndex = excanges[headerOffset].split(";").indexOf("Rate")
+	private var exchanges = returnExchanges(date)
+
 	fun getRate(currency: Currency): Double {
-		val rowIndex = excanges.indexOfFirst { it.contains(currency.code, ignoreCase = true) }
-		if (rowIndex == -1) throw IllegalArgumentException("Invalid currency codes")
-		return excanges[rowIndex].split(";")[currencyRateIndex].replace(",", ".").toDouble() * excanges[rowIndex].split(";")[currencyMultiplierIndex].toDouble()
+		val currencyItem = exchanges.find { it.code == currency.code }
+			?: throw IllegalArgumentException("Invalid currency code: ${currency.code}")
+		return currencyItem.rates / currencyItem.rate
 	}
-	private fun returnExchanges(date: LocalDate): List<String>{
+
+	private fun returnExchanges(date: LocalDate): List<CurrencyModel> {
 		val date = date.format(DateTimeFormatter.ofPattern("dd.MM.yyyy"))
 		val url = "https://bnm.md/en/export-official-exchange-rates?date=$date"
-		val csv = URL(url).readText().trim()
-		return csv.split("\n").map { it.trim() }
+		val rows = URL(url).readText().trim().split("\n")
+
+		val currencySymbolIndex = rows[headerOffset].split(";").indexOf("Abbr")
+		val currencyRateIndex = rows[headerOffset].split(";").map { it.trim() }.indexOf("Rates")
+		val currencyMultiplierIndex = rows[headerOffset].split(";").indexOf("Rate")
+		val internalCodeIndex = rows[headerOffset].split(";").indexOf("Code")
+
+		val csv = mutableListOf<CurrencyModel>()
+		for (i in (headerOffset + 1) until rows.size) {
+			val parts = rows[i].trim().split(";")
+			if (parts.size <= currencySymbolIndex) {
+				break // stop processing if line does not have code
+			}
+			csv.add(CurrencyModel(parts[internalCodeIndex].toShort(), parts[currencySymbolIndex], parts[currencyRateIndex].replace(",", ".").toDouble(), parts[currencyMultiplierIndex].toInt()))
+		}
+		return csv
 	}
 }
