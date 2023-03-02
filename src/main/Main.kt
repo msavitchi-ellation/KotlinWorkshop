@@ -1,11 +1,11 @@
-import data.Currency.RUB
+import data.Currency.MY_CURRENCY
 import data.Currency.UA
 import data.Currency.USD
 
 fun main(args: Array<String>) {
 	print("Enter amount: ")
-	val amount = 10//readln().toInt()
+	val amount = readln().toInt()
 	USD.performCalcWithMessage(amount)
 	UA.performCalcWithMessage(amount)
-	RUB.performCalcWithMessage(amount)
+	MY_CURRENCY.performCalcWithMessage(amount)
 }
