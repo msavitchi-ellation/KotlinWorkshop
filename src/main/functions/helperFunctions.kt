@@ -1,10 +1,10 @@
 package functions
 
 import data.Currency
-import data.CurrencyProvider
+import data.CurrencyBNMProvider
 import java.time.LocalDate.now
 
-private val currencyProvider = CurrencyProvider(now())
+private val currencyProvider = CurrencyBNMProvider(now())
 
 fun calculateAmount(amount: Int, rate: Double) = amount * rate
 

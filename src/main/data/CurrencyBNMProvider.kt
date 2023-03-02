@@ -4,7 +4,7 @@ import java.net.URL
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 
-class CurrencyProvider(date: LocalDate) {
+class CurrencyBNMProvider(date: LocalDate) {
 
 	private val headerOffset = 2
 	private var excanges = returnExchanges(date)
