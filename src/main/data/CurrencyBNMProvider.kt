@@ -4,16 +4,10 @@ import java.net.URL
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 
-class CurrencyBNMProvider(private val date: LocalDate) {
+class CurrencyBNMProvider(private val date: LocalDate) : CurrencyProvider() {
 
-	private val headerOffset = 2
-	private var exchanges = returnExchanges(date)
-
-	fun getRate(currency: Currency): Double {
-		val currencyItem = exchanges.find { it.code == currency.code }
-			?: throw IllegalArgumentException("Invalid currency code: ${currency.code}")
-		return currencyItem.rates / currencyItem.rate
-	}
+	override val headerOffset = 2
+	override var exchanges = returnExchanges(date)
 
 	private fun returnExchanges(date: LocalDate): List<CurrencyModel> {
 		val date = date.format(DateTimeFormatter.ofPattern("dd.MM.yyyy"))
