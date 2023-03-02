@@ -1,13 +1,14 @@
+import data.Currency
+import data.Currency.RUB
 import data.Currency.UA
 import data.Currency.USD
-import data.Currency.WEIRD
 
 fun main(args: Array<String>) {
 	print("Enter amount: ")
 	val amount = readln().toInt()
 	USD.performCalcWithMessage(amount)
 	UA.performCalcWithMessage(amount)
-	WEIRD.performCalcWithMessage(amount)
+	RUB.performCalcWithMessage(amount)
 }
 
 
